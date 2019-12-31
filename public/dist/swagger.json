@@ -8,11 +8,15 @@
     },
     "version": "1.3.0"
   },
-  "basePath": "/demo/api/v2",
-  "schemes": [
-    "http",
-    "https"
+
+  "servers":[
+    {
+      "url":"http://localhost:5001/demo/api/v2",
+      "description":"Local url"
+    }
   ],
+
+  
   "consumes": [
     "application/json",
     "application/x-www-form-urlencoded",
@@ -182,7 +186,7 @@
         "tags": [
           "User"
         ],
-        "description": "Guest Login",
+        "description": "Update Profile",
         "consumes": [
           "application/x-www-form-urlencoded"
         ],
@@ -200,16 +204,16 @@
           {
             "name": "name",
             "in": "formData",
-            "description": "name",
-            "required":true,
-            "type": "string"           
+            "description": "name of user",
+            "required": true,
+            "type": "string"
           },
           {
             "name": "username",
             "in": "formData",
-            "description": "username",
-            "type": "string",
-            "required": true     
+            "description": "userName of the user",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -345,55 +349,60 @@
           "User"
         ],
         "description": "Guest Login",
+        
+        "produces": [
+            "application/json"
+        ],
+        "requestBody":{
+                "content":{
+                  "multipart/form-data":{
+                    "schema":{
+                      "$ref":"#/components/schemas/ImageFile"
+                    }
+                  }
+                }
+            },
+        "responses": {
+            "200": {
+                "description": "Successfully"
+            },
+            "401": {
+                "description": "Unauthorized"
+            }
+        },
+        "security": [
+            {
+                "basicAuth": [
+                    "Username: ",
+                    "Password: "
+                ]
+            }
+        ]
+      }
+    },
+
+    "/user/getProfile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "GET Profile",
         "consumes": [
-            "multipart/form-data"
+          "application/x-www-form-urlencoded"
         ],
         "produces": [
             "application/json"
         ],
         "parameters": [
           {
-            "name": "deviceID",
-            "in": "formData",
-            "description": "deviceID",
+            "name": "accessToken",
+            "in": "header",
+            "description": "accessToken",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "deviceToken",
-            "in": "formData",
-            "description": "deviceToken",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "deviceTypeID",
-            "in": "formData",
-            "description": "1= IOS, 2=Android , 3=web",
-            "required": true,
-            "enum":[1,2,3],
-            "type": "integer"
-          },
-          {
-            "name": "name",
-            "in": "formData",
-            "description": "name",
-            "type": "string"           
-          },
-          {
-            "name": "username",
-            "in": "formData",
-            "description": "username",
-            "type": "string",
-            "required": true     
-          },
-          {
-            "name": "profileImage",
-            "in": "formData",
-            "description": "profileImage",
-            "type": "file"   
           }
         ],
+       
         "responses": {
             "200": {
                 "description": "Successfully"
@@ -413,9 +422,52 @@
       }
     }
   },
+
   "securityDefinitions": {
         "basicAuth": {
             "type": "basic"
         }
+    },
+
+    "components":{
+      "schemas":{
+        "ImageFile":{
+            "type":"object",
+            "properties":{
+              "profileImage":{
+                "type":"string",
+                "format":"binary",
+                "required":true
+              },
+              "deviceID":{
+                "description": "deviceID",
+                "required": true,
+                "type": "string"
+              },
+              "deviceToken":{
+                "description": "deviceToken",
+                "required": true,
+                "type": "string"
+              },
+              "deviceTypeID":{
+                "description": "1= IOS, 2=Android , 3=web",
+                "required": true,
+                "enum":[1,2,3],
+                "type": "integer"
+              },
+              "name":{
+                "description": "name",
+                "type": "string",
+                "required":true           
+              },
+              "username":
+              {
+                "description": "username",
+                "type": "string",
+                "required": true     
+              }
+            }
+        }
+      }
     }
 }

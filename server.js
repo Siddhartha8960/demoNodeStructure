@@ -5,7 +5,7 @@ console.log("");
 // const openApiDocumentation = require('./openApiDocumentation');
 //.env file read
 require('dotenv').config();
-
+require('appmetrics-dash').monitor();
 //socket
 //require('./lib/socketChat');
 
